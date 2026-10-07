@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Zugriff erlauben – Business Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@600&display=swap">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<main>
+  <h1>Business Suite</h1>
+  <p class="hint" id="subtitle">Anmeldung für einen Zugriff von außen</p>
+
+  <section class="card" id="step-email" hidden>
+    <form id="email-form">
+      <label for="email">E-Mail-Adresse</label>
+      <input id="email" type="email" autocomplete="email" required>
+      <div class="actions"><button type="submit">Anmeldelink senden</button></div>
+    </form>
+  </section>
+
+  <section class="card" id="step-sent" hidden>
+    <p>Wir haben dir einen Anmeldelink an <strong id="sent-to"></strong> geschickt. Öffne ihn in diesem Browser, danach geht es hier weiter.</p>
+    <div class="actions"><button type="button" class="secondary" id="back">Andere Adresse</button></div>
+  </section>
+
+  <section class="card" id="step-consent" hidden>
+    <p><strong id="client-name"></strong> möchte in deinem Namen auf die Business Suite zugreifen: Tickets, Projekte und weitere Einträge lesen und ändern, mit denselben Rechten wie du.</p>
+    <dl>
+      <dt>Angemeldet als</dt><dd id="user-email"></dd>
+      <dt>Rücksprung an</dt><dd id="redirect-uri" class="mono"></dd>
+    </dl>
+    <div class="actions">
+      <button type="button" id="approve">Erlauben</button>
+      <button type="button" class="secondary" id="deny">Ablehnen</button>
+    </div>
+  </section>
+
+  <section class="card" id="step-missing" hidden>
+    <p>Diese Seite wird von Claude oder einer anderen Anwendung aufgerufen, wenn du die Suite verbindest. Direkt aufgerufen gibt es hier nichts zu tun.</p>
+  </section>
+
+  <p class="error" id="error" hidden></p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.min.js"
+        integrity="sha384-WgXwGL6fUsYJWNaKJgVbrJKGRQwc1vieh2oy4kw9nXqpNDz3tdSsqEYUgeHD/NuF"
+        crossorigin="anonymous"></script>
+<script src="../../config.js"></script>
+<script src="consent.js"></script>
+</body>
+</html>
