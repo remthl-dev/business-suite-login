@@ -7,7 +7,7 @@
 // an die von Supabase vorgegebene Adresse zurück.
 
 const { url, publishableKey } = window.SUITE_CONFIG;
-const supabase = window.supabase.createClient(url, publishableKey, {
+const auth = window.supabase.createClient(url, publishableKey, {
   // implicit: Der Link aus der E-Mail funktioniert ohne Zwischenspeicher aus dem ersten Aufruf.
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' },
 });
@@ -29,7 +29,7 @@ function busy(form, on) {
 }
 
 async function showConsent() {
-  const { data, error } = await supabase.auth.oauth.getAuthorizationDetails(authorizationId);
+  const { data, error } = await auth.auth.oauth.getAuthorizationDetails(authorizationId);
   if (error) {
     showError(`Die Anfrage ist ungültig oder abgelaufen. Bitte in Claude neu verbinden. (${error.message})`);
     return;
@@ -50,8 +50,8 @@ async function decide(approve) {
   $('approve').disabled = $('deny').disabled = true;
   const options = { skipBrowserRedirect: true };
   const { data, error } = approve
-    ? await supabase.auth.oauth.approveAuthorization(authorizationId, options)
-    : await supabase.auth.oauth.denyAuthorization(authorizationId, options);
+    ? await auth.auth.oauth.approveAuthorization(authorizationId, options)
+    : await auth.auth.oauth.denyAuthorization(authorizationId, options);
   if (error || !data?.redirect_url) {
     showError(error?.message ?? 'Keine Rücksprungadresse erhalten. Bitte in Claude neu verbinden.');
     $('approve').disabled = $('deny').disabled = false;
@@ -66,7 +66,7 @@ $('email-form').addEventListener('submit', async (event) => {
   busy(event.target, true);
   const email = $('email').value.trim();
   const emailRedirectTo = `${location.origin}${location.pathname}?authorization_id=${encodeURIComponent(authorizationId)}`;
-  const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo } });
+  const { error } = await auth.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo } });
   busy(event.target, false);
   if (error) {
     showError(`Anmeldelink konnte nicht gesendet werden: ${error.message}`);
@@ -88,7 +88,7 @@ $('deny').addEventListener('click', () => decide(false));
     show('step-missing');
     return;
   }
-  const { data } = await supabase.auth.getSession();
+  const { data } = await auth.auth.getSession();
   if (data.session) await showConsent();
   else show('step-email');
 })();
